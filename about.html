@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - NSFW Shield</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .about-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 40px 30px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      color: #fff;
+    }
+
+    .about-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .about-header h1 {
+      font-size: 42px;
+      background: linear-gradient(90deg, #a78bfa, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section h2 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      color: #c4b5fd;
+      border-bottom: 2px solid rgba(167, 139, 250, 0.3);
+      padding-bottom: 10px;
+    }
+
+    .section p, .section li {
+      font-size: 17px;
+      line-height: 1.7;
+      color: #e0e7ff;
+    }
+
+    .highlight {
+      background: rgba(167, 139, 250, 0.15);
+      padding: 20px;
+      border-radius: 16px;
+      border-left: 5px solid #a78bfa;
+      margin: 25px 0;
+    }
+
+    .built-by {
+      text-align: center;
+      margin-top: 60px;
+      padding: 30px;
+      background: rgba(124, 58, 237, 0.1);
+      border-radius: 20px;
+      border: 1px solid rgba(167, 139, 250, 0.3);
+    }
+
+    .built-by h3 {
+      color: #c4b5fd;
+      margin-bottom: 10px;
+    }
+
+    .nav {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .nav a {
+      color: #a5b4fc;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 500;
+    }
+
+    .nav a:hover {
+      color: #c4b5fd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="index.html">← Back to Detector</a>
+      <a href="#">Home</a>
+      <a href="about.html">About</a>
+    </div>
+
+    <div class="about-container">
+      <div class="about-header">
+        <h1>🛡️ NSFW Shield</h1>
+        <p style="font-size: 20px; color: #a5b4fc;">AI-Powered Adult Content Detector</p>
+      </div>
+
+      <div class="section">
+        <h2>Project Overview</h2>
+        <p>
+          <strong>NSFW Shield</strong> is a modern, privacy-first web application that detects adult (NSFW) content in images directly in the browser using TensorFlow.js.
+        </p>
+        <p>
+          It analyzes uploaded images and classifies them into five categories: 
+          <strong>Neutral, Drawings, Hentai, Porn,</strong> and <strong>Sexy</strong>, 
+          providing instant visual feedback with clear safe/adult indicators.
+        </p>
+      </div>
+
+      <div class="section">
+        <h2>How I Built This Project</h2>
+        <p>I created NSFW Shield from scratch with the goal of building a fast, beautiful, and fully client-side AI tool.</p>
+        
+        <div class="highlight">
+          <strong>Key Highlights:</strong>
+          <ul>
+            <li>Entirely runs in the browser using TensorFlow.js (No server-side processing)</li>
+            <li>Modern glassmorphism UI with smooth animations</li>
+            <li>Drag & Drop + Click to upload support</li>
+            <li>Real-time image preview and loading states</li>
+            <li>Clear visual distinction between Safe and Adult content</li>
+          </ul>
+        </div>
+
+        <h3>Technical Implementation</h3>
+        <p>
+          • Used TensorFlow.js to load and run the NSFW MobileNet Graph Model<br>
+          • Preprocessed images (resized to 224×224 and normalized)<br>
+          • Built responsive UI with pure HTML, CSS, and vanilla JavaScript<br>
+          • Created a lightweight Express server for easy deployment
+        </p>
+      </div>
+
+      <div class="built-by">
+        <h3>Built by Rohith</h3>
+        <p>
+          A passionate developer from <strong>Warangal, Telangana, India</strong>.<br><br>
+          I love combining beautiful design with artificial intelligence to create useful and interactive web tools. 
+          This project helped me deepen my understanding of client-side machine learning, modern web UI/UX, 
+          and deploying TensorFlow.js models effectively.
+        </p>
+      </div>
+
+      <div class="section" style="text-align: center; margin-top: 50px;">
+        <a href="index.html" class="predict-btn" style="display: inline-block; width: auto; padding: 14px 40px;">
+          Try the NSFW Detector Now →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
