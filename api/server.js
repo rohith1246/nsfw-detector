@@ -10,7 +10,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../public')));
-app.use('/tfjs_model', express.static(path.join(__dirname, '../public/tfjs_model')));
+app.use('/nsfw', express.static(path.join(__dirname, '../public/nsfw')));
 
 // ✅ ADD THIS (VERY IMPORTANT)
 app.get('/', (req, res) => {
@@ -19,3 +19,11 @@ app.get('/', (req, res) => {
 
 // Export for Vercel
 module.exports = app;
+
+// For local development
+if (require.main === module) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
