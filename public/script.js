@@ -1,20 +1,61 @@
 let currentImageBase64 = null;
+let scanHistory = JSON.parse(localStorage.getItem('nsfwHistory')) || [];
 
-async function uploadImage() {
-  const fileInput = document.getElementById('imageUpload');
-  const resultDiv = document.getElementById('result');
-  const analyzeBtn = document.getElementById('analyzeBtn');
+const classLabels = ['Drawings', 'Hentai', 'Neutral', 'Porn', 'Sexy'];
+const adultClasses = ['Hentai', 'Porn', 'Sexy'];
 
-  if (!fileInput.files[0]) {
-    resultDiv.style.display = 'flex';
-    resultDiv.className = 'result';
-    resultDiv.innerHTML = '⚠️ Please select an image first.';
+function saveToHistory(base64, prediction, confidence, isAdult) {
+  scanHistory.unshift({
+    image: base64,
+    prediction: prediction,
+    confidence: confidence,
+    isAdult: isAdult,
+    timestamp: new Date().toLocaleTimeString()
+  });
+
+  if (scanHistory.length > 5) scanHistory.pop();
+  localStorage.setItem('nsfwHistory', JSON.stringify(scanHistory));
+  renderHistory();
+}
+
+function renderHistory() {
+  const container = document.getElementById('historyList');
+  const section = document.getElementById('historySection');
+  
+  if (scanHistory.length === 0) {
+    section.style.display = 'none';
     return;
   }
 
-  analyzeBtn.disabled = true;
-  analyzeBtn.textContent = 'Analyzing...';
+  section.style.display = 'block';
+  container.innerHTML = '';
 
+  scanHistory.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'history-item';
+    div.innerHTML = `
+      <img src="${item.image}" alt="preview">
+      <div>
+        <strong>${item.prediction}</strong><br>
+        <small>Confidence: ${(item.confidence * 100).toFixed(1)}% • ${item.timestamp}</small>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// Main Analysis Function
+async function uploadImage() {
+  const fileInput = document.getElementById('imageUpload');
+  const resultDiv = document.getElementById('result');
+  const loadingDiv = document.getElementById('loading');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+
+  if (!fileInput.files[0]) return;
+
+  analyzeBtn.disabled = true;
+  analyzeBtn.textContent = "Analyzing...";
+  loadingDiv.style.display = 'block';
   resultDiv.style.display = 'none';
 
   const file = fileInput.files[0];
@@ -41,28 +82,41 @@ async function uploadImage() {
       const data = await prediction.data();
       const classIndex = prediction.argMax(-1).dataSync()[0];
 
-      const classLabels = ['drawings', 'hentai', 'neutral', 'porn', 'sexy'];
       const predictedClass = classLabels[classIndex];
-      const confidence = data[classIndex].toFixed(4);
-
-      const adultClasses = ['hentai', 'porn', 'sexy'];
+      const confidence = data[classIndex];
       const isAdult = adultClasses.includes(predictedClass);
 
-      resultDiv.className = `result ${isAdult ? 'adult' : 'safe'}`;
-      resultDiv.style.display = 'flex';
-      resultDiv.innerHTML = `
-        <strong>${predictedClass.toUpperCase()}</strong><br>
-        Confidence: <strong>${confidence}</strong><br>
-        ${isAdult ? '⚠️ Adult Content Detected' : '✅ Safe for Work'}
+      // Display Result with Confidence Bars
+      let html = `
+        <strong style="font-size:18px;">${predictedClass}</strong><br>
+        <span style="font-size:15px;">Confidence: <strong>${(confidence*100).toFixed(1)}%</strong></span>
       `;
 
+      html += `<div style="margin-top:12px;">`;
+      data.forEach((val, i) => {
+        const percent = (val * 100).toFixed(1);
+        html += `
+          <small>${classLabels[i]}: ${percent}%</small>
+          <div class="confidence-bar"><div class="bar-fill" style="width: ${percent}%"></div></div>
+        `;
+      });
+      html += `</div>`;
+
+      resultDiv.className = `result ${isAdult ? 'adult' : 'safe'}`;
+      resultDiv.innerHTML = html;
+      resultDiv.style.display = 'flex';
+
+      saveToHistory(currentImageBase64, predictedClass, confidence, isAdult);
+
       tf.dispose([tfImage, prediction]);
+
     } catch (error) {
       console.error(error);
-      resultDiv.style.display = 'flex';
       resultDiv.className = 'result';
       resultDiv.innerHTML = '❌ Error during analysis. Please try again.';
+      resultDiv.style.display = 'flex';
     } finally {
+      loadingDiv.style.display = 'none';
       analyzeBtn.disabled = false;
       analyzeBtn.textContent = 'Analyze Image';
     }
@@ -71,19 +125,14 @@ async function uploadImage() {
   reader.readAsDataURL(file);
 }
 
-// Preview + Drag & Drop Support
 function showPreview(src) {
-  const preview = document.getElementById('preview');
-  const previewContainer = document.getElementById('previewContainer');
-  const uploadArea = document.getElementById('uploadArea');
-
-  preview.src = src;
-  previewContainer.style.display = 'block';
-  uploadArea.style.display = 'none';
+  document.getElementById('preview').src = src;
+  document.getElementById('previewContainer').style.display = 'block';
+  document.getElementById('uploadArea').style.display = 'none';
   document.getElementById('analyzeBtn').disabled = false;
 }
 
-// Setup Drag & Drop + Click
+// Drag & Drop + Click Setup
 document.addEventListener('DOMContentLoaded', () => {
   const uploadArea = document.getElementById('uploadArea');
   const fileInput = document.getElementById('imageUpload');
@@ -92,9 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
   uploadArea.addEventListener('click', () => fileInput.click());
 
   fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length > 0) {
+    if (e.target.files[0]) {
       const reader = new FileReader();
-      reader.onload = (ev) => {
+      reader.onload = ev => {
         currentImageBase64 = ev.target.result;
         showPreview(currentImageBase64);
       };
@@ -103,22 +152,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Drag & Drop
-  uploadArea.addEventListener('dragover', (e) => {
+  uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.borderColor = '#a78bfa'; });
+  uploadArea.addEventListener('dragleave', () => uploadArea.style.borderColor = '#7c3aed');
+  uploadArea.addEventListener('drop', e => {
     e.preventDefault();
-    uploadArea.style.borderColor = '#a78bfa';
-  });
-
-  uploadArea.addEventListener('dragleave', () => {
-    uploadArea.style.borderColor = '#64748b';
-  });
-
-  uploadArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadArea.style.borderColor = '#64748b';
+    uploadArea.style.borderColor = '#7c3aed';
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
-      reader.onload = (ev) => {
+      reader.onload = ev => {
         currentImageBase64 = ev.target.result;
         showPreview(currentImageBase64);
       };
@@ -133,4 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('result').style.display = 'none';
     document.getElementById('analyzeBtn').disabled = true;
   });
+
+  // Load history on start
+  renderHistory();
 });

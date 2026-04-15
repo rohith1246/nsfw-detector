@@ -13,7 +13,7 @@
       <div class="header">
         <div class="logo">
           <span class="shield">🛡️</span>
-          <h1>NSFW(NOT SAFE FOR WORK) DETECTOR </h1>
+          <h1>NSFW Shield</h1>
         </div>
         <p class="subtitle">AI-Powered Adult Content Detector</p>
       </div>
@@ -25,7 +25,7 @@
           <h3>Drop image here</h3>
           <p>or</p>
           <button class="browse-btn">Browse Files</button>
-          <p class="supported">Supported: JPG, PNG, WEBP</p>
+          <p class="supported">JPG, PNG, WEBP • Max 50MB</p>
         </div>
       </div>
 
@@ -38,17 +38,23 @@
         Analyze Image
       </button>
 
+      <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Analyzing image... Please wait</p>
+      </div>
+
       <div id="result" class="result"></div>
+
+      <div class="history-section" id="historySection" style="display: none;">
+        <h3>Recent Scans</h3>
+        <div id="historyList" class="history-list"></div>
+      </div>
     </div>
 
     <div class="footer">
-      <p>Powered by TensorFlow.js • Model: NSFW MobileNet</p>
+      <p>Powered by TensorFlow.js • 100% Private • No images are uploaded</p>
+      <a href="/about" class="about-link">About This Project</a>
     </div>
-    <div style="text-align: center; margin-bottom: 20px;">
-  <a href="about.html" style="color: #a5b4fc; text-decoration: none; font-weight: 500;">
-    About This Project
-  </a>
-</div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
