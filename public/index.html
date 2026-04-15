@@ -3,35 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NSFW Detector</title>
+  <title>NSFW Shield • AI Detector</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
   <div class="container">
     <div class="card">
-      <h1>🔍 NSFW Content Detector</h1>
-      <p class="subtitle">Upload an image to detect adult content using AI</p>
+      <div class="header">
+        <div class="logo">
+          <span class="shield">🛡️</span>
+          <h1>NSFW Shield</h1>
+        </div>
+        <p class="subtitle">AI-Powered Adult Content Detector</p>
+      </div>
 
-      <label class="upload-box">
-        <input type="file" id="imageUpload" accept="image/*">
-        <span>Click or Drag & Drop Image</span>
-      </label>
+      <div id="uploadArea" class="upload-area">
+        <input type="file" id="imageUpload" accept="image/*" hidden>
+        <div class="upload-content">
+          <div class="upload-icon">📸</div>
+          <h3>Drop image here</h3>
+          <p>or</p>
+          <button class="browse-btn">Browse Files</button>
+          <p class="supported">Supported: JPG, PNG, WEBP</p>
+        </div>
+      </div>
 
-      <button onclick="uploadImage()" class="predict-btn">
+      <div class="preview-container" id="previewContainer" style="display: none;">
+        <img id="preview" alt="Preview">
+        <button id="removeBtn" class="remove-btn">✕</button>
+      </div>
+
+      <button onclick="uploadImage()" class="predict-btn" id="analyzeBtn" disabled>
         Analyze Image
       </button>
 
-      <div id="result"></div>
+      <div id="result" class="result"></div>
+    </div>
 
-      <div class="preview-container">
-        <img id="preview" src="" alt="Image Preview">
-      </div>
+    <div class="footer">
+      <p>Powered by TensorFlow.js • Model: NSFW MobileNet</p>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
   <script src="script.js"></script>
-
 </body>
 </html>
