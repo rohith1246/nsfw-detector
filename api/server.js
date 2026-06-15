@@ -4,12 +4,13 @@ const path    = require('path');
 const app  = express();
 const PORT = process.env.PORT || 10000;
 
-// Serve everything in the project root as static files
-// index.html, style.css, script.js, and /nsfw/model.json all live here
+// Serve static files from project root
+// Handles: index.html, style.css, script.js, /nsfw/model.json
 app.use(express.static(path.join(__dirname, '..')));
 
-// Explicit fallback: any unmatched GET → index.html
-app.get('(.*)', (req, res) => {
+// Fallback — no app.get() wildcard, uses middleware instead
+// Works with Express 4 AND Express 5 / path-to-regexp v8
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
