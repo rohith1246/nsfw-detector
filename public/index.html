@@ -3,11 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Content Moderation AI | Rohith Builds Labs</title>
+  <title>NSFW Shield — AI Content Moderation | Rohith Builds Labs</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Free AI-powered NSFW image detector. 5-class content classification: Neutral, Drawings, Sexy, Hentai, Porn. 100% private — runs entirely in your browser. No images uploaded.">
+  <meta name="keywords" content="NSFW detector, content moderation AI, image moderation tool, adult content filter, browser based NSFW, free NSFW checker, image classification">
+  <meta name="author" content="Rohith Builds Labs">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://content-moderation-ai.onrender.com">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://content-moderation-ai.onrender.com">
+  <meta property="og:title" content="NSFW Shield — AI Content Moderation">
+  <meta property="og:description" content="Free, private, browser-based NSFW image detector. No uploads. No server. Just AI.">
+  <meta property="og:site_name" content="Rohith Builds Labs">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="NSFW Shield — AI Content Moderation">
+  <meta name="twitter:description" content="Free, private, browser-based NSFW image detector. Runs 100% in your browser.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "NSFW Shield",
+    "description": "AI-powered adult content detector that runs entirely in the browser. No images are uploaded to any server.",
+    "url": "https://content-moderation-ai.onrender.com",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Rohith Builds Labs",
+      "url": "https://rohith-builds-labs.onrender.com"
+    }
+  }
+  </script>
+
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <!-- Labs Navbar (uses .labs-nav class from style.css) -->
+  <nav class="labs-nav">
+    <a href="https://rohith-builds-labs.onrender.com" class="brand">Rohith Builds Labs</a>
+    <a href="https://rohith-builds-labs.onrender.com/work" class="back">← Our Work</a>
+  </nav>
+
   <div class="container">
     <div class="card">
       <div class="header">
@@ -18,32 +68,38 @@
         <p class="subtitle">AI-Powered Adult Content Detector</p>
       </div>
 
+      <!-- Model status indicator -->
+      <div id="modelStatus" class="model-status">
+        <span class="status-dot loading-dot"></span>
+        <span id="modelStatusText">Loading AI model...</span>
+      </div>
+
       <div id="uploadArea" class="upload-area">
         <input type="file" id="imageUpload" accept="image/*" hidden>
         <div class="upload-content">
           <div class="upload-icon">📸</div>
           <h3>Drop image here</h3>
           <p>or</p>
-          <button class="browse-btn">Browse Files</button>
-          <p class="supported">JPG, PNG, WEBP • Max 50MB</p>
+          <button class="browse-btn" type="button">Browse Files</button>
+          <p class="supported">JPG, PNG, WEBP · Max 50MB</p>
         </div>
       </div>
 
       <div class="preview-container" id="previewContainer" style="display: none;">
-        <img id="preview" alt="Preview">
-        <button id="removeBtn" class="remove-btn">✕</button>
+        <img id="preview" alt="Uploaded image preview">
+        <button id="removeBtn" class="remove-btn" type="button" aria-label="Remove image">✕</button>
       </div>
 
-      <button onclick="uploadImage()" class="predict-btn" id="analyzeBtn" disabled>
+      <button onclick="analyzeImage()" class="predict-btn" id="analyzeBtn" disabled type="button">
         Analyze Image
       </button>
 
       <div id="loading" class="loading" style="display: none;">
         <div class="spinner"></div>
-        <p>Analyzing image... Please wait</p>
+        <p>Analyzing image...</p>
       </div>
 
-      <div id="result" class="result"></div>
+      <div id="result" class="result" role="alert" aria-live="polite"></div>
 
       <div class="history-section" id="historySection" style="display: none;">
         <h3>Recent Scans</h3>
@@ -51,29 +107,17 @@
       </div>
     </div>
 
-    <p>Powered by TensorFlow.js • 100% Private • No images uploaded</p>
-<p style="margin-top:8px;">
-  Built by 
-  <a href="https://rohith-builds-labs.onrender.com" 
-     style="color:#7c3aed;">Rohith Builds Labs</a>
-</p>
+    <!-- Footer (uses .footer class from style.css) -->
+    <footer class="footer">
+      <p>Powered by TensorFlow.js · 100% Private · No images uploaded to any server</p>
+      <p style="margin-top: 6px;">
+        Built by <a href="https://rohith-builds-labs.onrender.com">Rohith Builds Labs</a>
+      </p>
+    </footer>
+  </div>
 
+  <!-- Scripts at end of body, INSIDE html tag -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
   <script src="script.js"></script>
 </body>
-<div style="background:#0d1117;padding:12px 24px;
-display:flex;justify-content:space-between;
-align-items:center;border-bottom:1px solid #30363d;">
-  <a href="https://rohith-builds-labs.onrender.com" 
-     style="color:#fbbf24;font-weight:700;
-     text-decoration:none;font-family:Inter,sans-serif;
-     font-size:15px;">
-     Rohith Builds Labs
-  </a>
-  <a href="https://rohith-builds-labs.onrender.com/work" 
-     style="color:#8b949e;font-size:13px;
-     text-decoration:none;font-family:Inter,sans-serif;">
-     ← Our Work
-  </a>
-</div>
 </html>
