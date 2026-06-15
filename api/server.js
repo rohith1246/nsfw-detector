@@ -4,14 +4,12 @@ const path    = require('path');
 const app  = express();
 const PORT = process.env.PORT || 10000;
 
-// Serve static files from project root
-// Handles: index.html, style.css, script.js, /nsfw/model.json
-app.use(express.static(path.join(__dirname, '..')));
+// Static files live in /public/ (index.html, style.css, script.js, /nsfw/)
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// Fallback — no app.get() wildcard, uses middleware instead
-// Works with Express 4 AND Express 5 / path-to-regexp v8
+// Fallback → index.html (no wildcard route, Express 4+5 safe)
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
