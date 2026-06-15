@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 10000;
 app.use(express.static(path.join(__dirname, '..')));
 
 // Explicit fallback: any unmatched GET → index.html
-app.get('*', (req, res) => {
+app.get('(.*)', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
